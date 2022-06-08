@@ -1,0 +1,192 @@
+<!--
+ * @Description: 
+ * @Autor: fylih
+ * @Date: 2022-02-23 14:50:21
+ * @LastEditors: fylih
+ * @LastEditTime: 2022-02-23 17:57:29
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/reset.css">
+    <title>大鱼吃小鱼</title>
+</head>
+
+<body>
+    <audio id="bgAudio" loop></audio>
+    <audio id="eatAudio"></audio>
+    <audio id="beEatAudio"></audio>
+    <div id="container">
+        <div class="dialog_start_box">
+            <div class="start_btn">开始游戏</div>
+        </div>
+        <div class="audio_box">
+            <div id="audio_start" style="display: none;">🎵</div>
+            <div id="audio_mute">🎵</div>
+        </div>
+        <div class="control_box">
+            <div id="game_start" style="display: none;">🔺</div>
+            <div id="game_pause">| |</div>
+        </div>
+    </div>
+</body>
+<script type="module">
+    import { start, pause } from './js/game.js'
+    const dialogStartBox = document.getElementsByClassName('dialog_start_box')[0]
+    const startBtn = document.getElementsByClassName('start_btn')[0]
+
+    const bgAudio = document.getElementById('bgAudio'),
+        eatAudio = document.getElementById('eatAudio'),
+        beEatAudio = document.getElementById('beEatAudio')
+
+    const bgAudioSrc = './assets/audio/bg.mp3',
+        eatAudioSrc = './assets/audio/eat.wav',
+        beEatAudioSrc = './assets/audio/beEat.mp3'
+
+    startBtn.onclick = function () {
+        dialogStartBox.style.display = 'none'
+
+        bgAudio.src = bgAudioSrc
+        eatAudio.src = eatAudioSrc
+        beEatAudio.src = beEatAudioSrc
+
+        eatAudio.muted = true
+        beEatAudio.muted = true
+
+        bgAudio.play()
+        eatAudio.play()
+        beEatAudio.play()
+
+        setTimeout(() => {
+            eatAudio.muted = false
+            beEatAudio.muted = false
+        }, 1500)
+    }
+
+    const audioMute = document.getElementById('audio_mute'),
+        audioStart = document.getElementById('audio_start'),
+        gameStart = document.getElementById('game_start'),
+        gamePause = document.getElementById('game_pause')
+
+    audioMute.onclick = function () {
+        eatAudio.muted = true
+        beEatAudio.muted = true
+        bgAudio.pause()
+        audioStart.style.display = 'block'
+        audioMute.style.display = 'none'
+    }
+
+    audioStart.onclick = function () {
+        eatAudio.muted = false
+        beEatAudio.muted = false
+        bgAudio.play()
+        audioMute.style.display = 'block'
+        audioStart.style.display = 'none'
+    }
+
+    gamePause.onclick = function () {
+        pause(true)
+        gameStart.style.display = 'block'
+        gamePause.style.display = 'none'
+    }
+
+    gameStart.onclick = function () {
+        pause(false)
+        gamePause.style.display = 'block'
+        gameStart.style.display = 'none'
+    }
+
+    start()
+</script>
+<style>
+    #container {
+        width: 100vx;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dialog_start_box {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dialog_start_box .start_btn {
+        font-size: 25px;
+        border-radius: 10px;
+        border: 5px solid #fff;
+        padding: 10px;
+        color: rgb(220, 22, 22);
+        background: rgb(238, 176, 5);
+        font-weight: bold;
+    }
+
+    .control_box {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        width: 45px;
+        height: 45px;
+        border: 5px solid white;
+        border-radius: 5px;
+        background: rgb(7, 235, 220);
+
+    }
+
+    .control_box #game_pause {
+        font-weight: bold;
+        color: red;
+        text-align: center;
+        font-size: 16px;
+        line-height: 30px;
+    }
+
+    .control_box #game_start {
+        transform: rotate(90deg);
+        text-align: center;
+        line-height: 35px;
+    }
+
+    .audio_box {
+        position: absolute;
+        right: 55px;
+        top: 5px;
+        width: 45px;
+        height: 45px;
+        border: 5px solid white;
+        border-radius: 5px;
+        background: rgb(7, 235, 220);
+
+    }
+
+    .audio_box #audio_start,
+    .audio_box #audio_mute {
+        text-align: center;
+        font-size: 16px;
+        line-height: 32px;
+    }
+
+    .audio_box #audio_start::before {
+        content: ' ';
+        position: absolute;
+        width: 45px;
+        height: 4px;
+        border-radius: 2px;
+        background: red;
+        transform: rotate(135deg);
+        top: 15px;
+        left: -5px;
+    }
+</style>
+
+</html>
